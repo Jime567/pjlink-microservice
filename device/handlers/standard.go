@@ -7,11 +7,11 @@ import (
 
 	"github.com/byuoitav/common/status"
 	"github.com/byuoitav/pjlink-microservice/pjlink"
+	"github.com/gin-gonic/gin"
 	"github.com/jessemillar/jsonresp"
-	"github.com/labstack/echo"
 )
 
-func PowerOn(context echo.Context) error {
+func (d *DeviceManager) PowerOn(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "power", "power-on")
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -27,7 +27,7 @@ func PowerOn(context echo.Context) error {
 	return context.JSON(http.StatusInternalServerError, response)
 }
 
-func PowerOff(context echo.Context) error {
+func (d *DeviceManager) PowerOff(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "power", "power-off")
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -43,7 +43,7 @@ func PowerOff(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func GetPowerStatus(context echo.Context) error {
+func (d *DeviceManager) GetPowerStatus(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "power", "query")
 
 	response, err := pjlink.GetPowerStatus(request)
@@ -54,9 +54,9 @@ func GetPowerStatus(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-//some projectors *panasonic - cough* only accept av mute, not just blank, so
-//a blank command both blanks and mutes
-func DisplayBlank(context echo.Context) error {
+// some projectors *panasonic - cough* only accept av mute, not just blank, so
+// a blank command both blanks and mutes
+func (d *DeviceManager) DisplayBlank(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "av-mute", "av-mute-on")
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -72,7 +72,7 @@ func DisplayBlank(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func DisplayUnBlank(context echo.Context) error {
+func (d *DeviceManager) DisplayUnBlank(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "av-mute", "av-mute-off")
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -88,7 +88,7 @@ func DisplayUnBlank(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func GetBlankedStatus(context echo.Context) error {
+func (d *DeviceManager) GetBlankedStatus(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "av-mute", "query")
 
 	response, err := pjlink.GetBlankedStatus(request)
@@ -99,7 +99,7 @@ func GetBlankedStatus(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func VolumeMute(context echo.Context) error {
+func (d *DeviceManager) VolumeMute(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "av-mute", "audio-mute-on")
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -115,7 +115,7 @@ func VolumeMute(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func VolumeUnMute(context echo.Context) error {
+func (d *DeviceManager) VolumeUnMute(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "av-mute", "audio-mute-off")
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -131,7 +131,7 @@ func VolumeUnMute(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func GetMuteStatus(context echo.Context) error {
+func (d *DeviceManager) GetMuteStatus(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "av-mute", "query")
 
 	response, err := pjlink.GetMuteStatus(request)
@@ -142,7 +142,7 @@ func GetMuteStatus(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func SetInputPort(context echo.Context) error {
+func (d *DeviceManager) SetInputPort(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "input", context.Param("port"))
 
 	response, responseError := pjlink.HandleRequest(request)
@@ -158,7 +158,7 @@ func SetInputPort(context echo.Context) error {
 	return context.JSON(http.StatusInternalServerError, response)
 }
 
-func GetCurrentInput(context echo.Context) error {
+func (d *DeviceManager) GetCurrentInput(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "input", "query")
 
 	response, err := pjlink.GetCurrentInput(request)
@@ -169,7 +169,7 @@ func GetCurrentInput(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func GetInputList(context echo.Context) error {
+func (d *DeviceManager) GetInputList(context *gin.Context) error {
 	request := formRequestFromEnvVars(context.Param("address"), "input-list", "query")
 
 	response, err := pjlink.GetInputList(request)

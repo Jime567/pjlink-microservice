@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func Raw(context echo.Context) error {
+func (d *DeviceManager) Raw(context echo.Context) error {
 	request := pjlink.PJRequest{}
 
 	requestError := context.Bind(&request)
@@ -26,7 +26,7 @@ func Raw(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func RawInfo(context echo.Context) error {
+func (d *DeviceManager) RawInfo(context echo.Context) error {
 	jsonresp.New(context.Response(), http.StatusBadRequest, "Send a POST request to the /raw endpoint with a body including Address, Port, Class, Password, Command, and Parameter tokens")
 	return nil
 }

@@ -21,26 +21,26 @@ func (d *DeviceManager) RunHTTPServer(router *gin.Engine, port string) error {
 
 	route := router.Group("")
 
-	route.GET("/raw", handlers.RawInfo)
-	route.POST("/raw", handlers.Raw)
-	route.GET("/command", handlers.CommandInfo)
-	route.POST("/command", handlers.Command)
+	route.GET("/raw", d.RawInfo)
+	route.POST("/raw", d.Raw)
+	route.GET("/command", d.CommandInfo)
+	route.POST("/command", d.Command)
 
 	//status endpoints
-	router.GET("/:address/power/status", handlers.GetPowerStatus)
-	router.GET("/:address/display/status", handlers.GetBlankedStatus)
-	router.GET("/:address/volume/mute/status", handlers.GetMuteStatus)
-	router.GET("/:address/input/current", handlers.GetCurrentInput)
-	router.GET("/:address/input/list", handlers.GetInputList)
+	router.GET("/:address/power/status", d.GetPowerStatus)
+	router.GET("/:address/display/status", d.GetBlankedStatus)
+	router.GET("/:address/volume/mute/status", d.GetMuteStatus)
+	router.GET("/:address/input/current", d.GetCurrentInput)
+	router.GET("/:address/input/list", d.GetInputList)
 
 	//functionality endpoints
-	router.GET("/:address/power/on", handlers.PowerOn)
-	router.GET("/:address/power/standby", handlers.PowerOff)
-	router.GET("/:address/display/blank", handlers.DisplayBlank)
-	router.GET("/:address/display/unblank", handlers.DisplayUnBlank)
-	router.GET("/:address/volume/mute", handlers.VolumeMute)
-	router.GET("/:address/volume/unmute", handlers.VolumeUnMute)
-	router.GET("/:address/input/:port", handlers.SetInputPort)
+	router.GET("/:address/power/on", d.PowerOn)
+	router.GET("/:address/power/standby", d.PowerOff)
+	router.GET("/:address/display/blank", d.DisplayBlank)
+	router.GET("/:address/display/unblank", d.DisplayUnBlank)
+	router.GET("/:address/volume/mute", d.VolumeMute)
+	router.GET("/:address/volume/unmute", d.VolumeUnMute)
+	router.GET("/:address/input/:port", d.SetInputPort)
 
 	server := &http.Server{
 		Addr:           port,

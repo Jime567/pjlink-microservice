@@ -8,7 +8,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-func Command(context echo.Context) error {
+func (d *DeviceManager) Command(context echo.Context) error {
 	request := pjlink.PJRequest{}
 
 	requestError := context.Bind(&request)
@@ -31,7 +31,7 @@ func Command(context echo.Context) error {
 	return context.JSON(http.StatusOK, response)
 }
 
-func CommandInfo(context echo.Context) error {
+func (d *DeviceManager) CommandInfo(context echo.Context) error {
 	jsonresp.New(context.Response(), http.StatusBadRequest, "Send a POST request to the /command endpoint with a body including Address, Port, Class, Password, Command, and Parameter tokens")
 	return nil
 }
