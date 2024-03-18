@@ -1,20 +1,30 @@
-package main
+package device
 
 import (
+	"fmt"
+	"log/slog"
 	"net/http"
 
-	"github.com/byuoitav/pjlink-microservice/handlers"
-	"github.com/labstack/echo"
+	"github.com/gin-gonic/gin"
 )
 
-func main() {
-	port := ":8005"
-	router := echo.New()
+type DeviceManager struct {
+	Log *slog.Logger
+}
 
-	router.GET("/raw", handlers.RawInfo)
-	router.POST("/raw", handlers.Raw)
-	router.GET("/command", handlers.CommandInfo)
-	router.POST("/command", handlers.Command)
+func (d *DeviceManager) GetLogger() *slog.Logger {
+	return d.Log
+}
+
+func (d *DeviceManager) RunHTTPServer(router *gin.Engine, port string) error {
+	d.Log.Info("registering http endpoints")
+
+	route := router.Group("")
+
+	route.GET("/raw", handlers.RawInfo)
+	route.POST("/raw", handlers.Raw)
+	route.GET("/command", handlers.CommandInfo)
+	route.POST("/command", handlers.Command)
 
 	//status endpoints
 	router.GET("/:address/power/status", handlers.GetPowerStatus)
@@ -32,10 +42,15 @@ func main() {
 	router.GET("/:address/volume/unmute", handlers.VolumeUnMute)
 	router.GET("/:address/input/:port", handlers.SetInputPort)
 
-	server := http.Server{
+	server := &http.Server{
 		Addr:           port,
-		MaxHeaderBytes: 1024 * 10,
+		MaxHeaderBytes: 1021 * 10,
 	}
 
-	router.StartServer(&server)
+	d.Log.Info("running http server", slog.String("port", port))
+	err := router.Run(server.Addr)
+
+	d.Log.Error("http server stopped", err)
+
+	return fmt.Errorf("http server stopped")
 }

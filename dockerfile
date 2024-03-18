@@ -1,12 +1,9 @@
-FROM byuoitav/amd64-alpine
-MAINTAINER Daniel Randall <danny_randall@byu.edu>
+FROM alpine:3.18
+
+RUN apk update && apk add bash && apk --no-cache add tzdata
 
 ARG NAME
-ENV name=${NAME}
 
-COPY ${name}-bin ${name}-bin 
-COPY version.txt version.txt
+COPY ${NAME} /pjlink-control
 
-# add any required files/folders here
-
-ENTRYPOINT ./${name}-bin
+ENTRYPOINT ["/pjlink-control"]
