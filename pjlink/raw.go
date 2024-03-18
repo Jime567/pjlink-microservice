@@ -11,9 +11,9 @@ import (
 	"time"
 )
 
-//HandleRawRequest is a wrapper function for all handling activity
-//success: returns a populated PjResponse struct, nil error
-//failure: returns empty PjResponse struct, error
+// HandleRawRequest is a wrapper function for all handling activity
+// success: returns a populated PjResponse struct, nil error
+// failure: returns empty PjResponse struct, error
 func HandleRawRequest(request PJRequest) (PJResponse, error) {
 	validateError := validateRawRequest(request)
 
@@ -29,8 +29,8 @@ func HandleRawRequest(request PJRequest) (PJResponse, error) {
 	}
 }
 
-//this function validates cmd length, before we send request.
-//as of now this function only tests for 4 chars, which is pjlink standard cmd length
+// this function validates cmd length, before we send request.
+// as of now this function only tests for 4 chars, which is pjlink standard cmd length
 func validateRawRequest(request PJRequest) error {
 	if len(request.Command) != 4 { // 4 characters is standard command length for PJLink
 		return errors.New("Your command doesn't have character length of 4")
@@ -84,9 +84,9 @@ func sendRawRequest(request PJRequest) (string, error) {
 	return scanner.Text(), nil
 }
 
-//attempts to establish a TCP socket with the specified IP:port
-//success: returns populated pjlinkConn struct and nil error
-//failure: returns empty pjlinkConn and error
+// attempts to establish a TCP socket with the specified IP:port
+// success: returns populated pjlinkConn struct and nil error
+// failure: returns empty pjlinkConn and error
 func connectToPJLink(ip, port string) (net.Conn, error) {
 	protocol := "tcp" //PJLink always uses TCP
 	timeout := 5      //represents seconds
@@ -100,10 +100,11 @@ func connectToPJLink(ip, port string) (net.Conn, error) {
 	return connection, connectionError
 }
 
-//handle and parse response
-//returns a populated PJResponse struct
+// handle and parse response
+// returns a populated PJResponse struct
 func parseRawResponse(response string) (PJResponse, error) {
 	// If password is wrong, response will be 'PJLINK ERRA'
+	fmt.Print("response: ", response, "\n")
 	if strings.Contains(response, "ERRA") { //if authentication succeeded
 		return PJResponse{}, errors.New("Incorrect password")
 		//example response: "%1POWR=0"
@@ -121,14 +122,14 @@ func parseRawResponse(response string) (PJResponse, error) {
 	return PJResponse{Class: token0[1:2], Command: token0[2:6], Response: params}, nil
 }
 
-//returns PJLink command string
+// returns PJLink command string
 func generateCommand(seed string, request PJRequest) string {
 	return createEncryptedMessage(seed, request.Password) + "%" +
 		request.Class + request.Command + " " + request.Parameter
 }
 
-//generates a hash given seed and password
-//returns string hash
+// generates a hash given seed and password
+// returns string hash
 func createEncryptedMessage(seed, password string) string {
 	//generate MD5
 	data := []byte(seed + password)
@@ -140,9 +141,9 @@ func createEncryptedMessage(seed, password string) string {
 	return stringHash
 }
 
-//verify we receive a pjlink class 1 challenge
-//success: returns true
-//failure: returns false
+// verify we receive a pjlink class 1 challenge
+// success: returns true
+// failure: returns false
 func verifyPJLink(response []string) bool {
 	if response[0] != "PJLINK" {
 		return false

@@ -4,16 +4,12 @@ import (
 	"net/http"
 
 	"github.com/byuoitav/pjlink-microservice/handlers"
-	"github.com/jessemillar/health"
 	"github.com/labstack/echo"
 )
 
 func main() {
 	port := ":8005"
 	router := echo.New()
-
-	router.GET("/health", echo.WrapHandler(http.HandlerFunc(health.Check)))
-	router.GET("/status", echo.WrapHandler(http.HandlerFunc(health.Check)))
 
 	router.GET("/raw", handlers.RawInfo)
 	router.POST("/raw", handlers.Raw)
